@@ -7,15 +7,36 @@ import java.util.*;
 import java.io.*;
 
 class Movimentos{
+  /* State contains the game map */
+  boolean[][] state;
 
+  /* Generic constructor */
+  public Movimentos()
+  {
+    state = new boolean[20][20];
+  }
 }
 
 class Jogador extends Movimentos{
-
+  /* Current location */
+  int x;
+  int y;
+  public Jogador(int x, int y)
+  {
+    this.x = x;
+    this.y = y;
+  }
 }
 
 class PocaoMagica extends Movimentos{
-
+  /* Current location */
+  int x;
+  int y;
+  public PocaoMagica(int x, int y)
+  {
+    this.x = x;
+    this.y = y;
+  }
 }
 
 /*This board class contains the player, ghosts, pellets, and most of the game logic.*/
@@ -33,15 +54,16 @@ public class Background extends JPanel{
   PocaoMagica pocao = new PocaoMagica(200,200);
 
   /* Constructor initializes state flags etc.*/
-  public Board()
+  public Background()
   {
-
+  
   }
 
   public Dimension getPreferredSize() {
     return new Dimension(800, 400);
   }
 
+  //A PRINCIPAL FUNCAO - IRA REDESENHAR A TELA DURANTE O JOGO
   public void paint(Graphics g) {
     //Funcao que o sistema chama se precisar
     super.paint(g);
@@ -57,6 +79,10 @@ public class Background extends JPanel{
   public void atualizaFundo(int x,int y, int width, int height)
   {
 
+  }
+
+  static public void main(String[] args) {
+    Background board = new Background();
   }
 
 }
