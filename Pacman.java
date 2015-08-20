@@ -96,7 +96,7 @@ public class Pacman extends JFrame {
                 if (e.getKeyCode() == e.VK_DOWN) key_down = true;
                 if (e.getKeyCode() == e.VK_UP) key_up = true;
                 if (e.getKeyCode() == e.VK_RIGHT) key_right = true;
-                if (e.getKeyCode() == e.VK_LEFT) key_left = true;
+                if (e.getKeyCode() == e.VK_LEFT) key_left = true; //teste
             }
         }
     }
