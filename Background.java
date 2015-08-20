@@ -11,10 +11,8 @@ public class Background extends JPanel{
 
   Image pacmanClientAImage = Toolkit.getDefaultToolkit().getImage("images/pacmanA.jpg");
   Image pacmanClientBImage = Toolkit.getDefaultToolkit().getImage("images/pacmanB.jpg");
-  Image pacmanClientBImage = Toolkit.getDefaultToolkit().getImage("images/pacmanB.jpg");
+  Image magicPotionImage = Toolkit.getDefaultToolkit().getImage("images/magicpotion.jpg");
+  Image magicPotionImage = Toolkit.getDefaultToolkit().getImage("images/magicpotion.jpg");
 
-  Image titleScreenImage = Toolkit.getDefaultToolkit().getImage("img/titleScreen.jpg");
-  Image gameOverImage = Toolkit.getDefaultToolkit().getImage("img/gameOver.jpg");
-  Image winScreenImage = Toolkit.getDefaultToolkit().getImage("img/winScreen.jpg");
 
 }

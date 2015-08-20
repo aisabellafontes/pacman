@@ -27,6 +27,6 @@ public class Pacman extends JApplet implements MouseListener, KeyListener{
     /* Make frame visible, disable resizing */
     f.setVisible(true);
     f.setResizable(false);
-}
+    }
 
 }
