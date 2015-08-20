@@ -20,7 +20,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener
 
       /* Create and set up window frame*/
       JFrame frame = new JFrame();
-      frame.setSize(800,600);
+      frame.setSize(800, 600);
 
       /* Add the board to the frame */
       frame.add(fundo, BorderLayout.CENTER);

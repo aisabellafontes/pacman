@@ -19,23 +19,25 @@ class Movimentos{
 
 class Jogador extends Movimentos{
   /* Current location */
-  int x;
-  int y;
+  int x, y;
   public Jogador(int x, int y)
   {
     this.x = x;
     this.y = y;
+    this.width = 90;
+    this.height = 90;
   }
 }
 
 class PocaoMagica extends Movimentos{
   /* Current location */
-  int x;
-  int y;
+  int x,y;
   public PocaoMagica(int x, int y)
   {
     this.x = x;
     this.y = y;
+    this.width = 90;
+    this.height = 90;
   }
 }
 
@@ -46,17 +48,17 @@ public class Background extends JPanel{
   Image pacmanClienteBImage = Toolkit.getDefaultToolkit().getImage("images/pacmanB.png");
   Image pacmanMagicoImage = Toolkit.getDefaultToolkit().getImage("images/pacmanMagic.png");
   Image pocaoMagicaImage = Toolkit.getDefaultToolkit().getImage("images/magicPotion.png");
-  Image backgrounImage = Toolkit.getDefaultToolkit().getImage("images/background.jpg");
+  Image backgroundImage = Toolkit.getDefaultToolkit().getImage("images/background.jpg");
 
   /* Initialize the player and ghosts */
-  Jogador jogadorA = new Jogador(400,10);
+  Jogador jogadorA = new Jogador(90,90);
   Jogador jogadorB = new Jogador(10,400);
   PocaoMagica pocao = new PocaoMagica(200,200);
 
   /* Constructor initializes state flags etc.*/
   public Background()
   {
-  
+
   }
 
   public Dimension getPreferredSize() {
@@ -68,7 +70,11 @@ public class Background extends JPanel{
     //Funcao que o sistema chama se precisar
     super.paint(g);
     //drawImageh(Image img, int x, int y, int width, int height, ImageObserver observer)
-    g.drawImage(backgrounImage, 0, 0, getSize().width, getSize().height, this);
+    g.drawImage(backgroundImage, 0, 0, getSize().width, getSize().height, this);
+    g.drawImage(pacmanClienteAImage, 400, 10, width, height, this);
+    g.drawImage(pacmanClienteBImage, 10, 400, width, jogadorB.height, this);
+    g.drawImage(pocaoMagicaImage, 250, 250, width, pocao.height, this);
+
   }
 
   public void reset()
