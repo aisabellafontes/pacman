@@ -1,3 +1,12 @@
+/*
+*
+* Jogo Corrida de Pacman com 2 jogadores
+*  @author: Isabella Fontes, Flavia Crepaldi Mariano
+*  @cia: UNESP Brazil / 2015
+*  @email: aisabellafontes@gmail.com / fla_mariano@hotmail.com
+*  @github: https://github.com/aisabellafontes/pacman.git
+*/
+
 import java.net.*;
 import java.io.*;
 import java.util.*;
