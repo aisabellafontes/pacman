@@ -24,8 +24,6 @@ class Jogador extends Movimentos{
   {
     this.x = x;
     this.y = y;
-    this.width = 90;
-    this.height = 90;
   }
 }
 
@@ -36,13 +34,11 @@ class PocaoMagica extends Movimentos{
   {
     this.x = x;
     this.y = y;
-    this.width = 90;
-    this.height = 90;
   }
 }
 
 /*This board class contains the player, ghosts, pellets, and most of the game logic.*/
-public class Background extends JPanel{
+public class Background extends JPanel {
 
   Image pacmanClienteAImage = Toolkit.getDefaultToolkit().getImage("images/pacmanA.png");
   Image pacmanClienteBImage = Toolkit.getDefaultToolkit().getImage("images/pacmanB.png");
@@ -56,34 +52,33 @@ public class Background extends JPanel{
   PocaoMagica pocao = new PocaoMagica(200,200);
 
   /* Constructor initializes state flags etc.*/
-  public Background()
-  {
-
+  public Background() {
+  
   }
 
   public Dimension getPreferredSize() {
-    return new Dimension(800, 400);
+    return new Dimension(1024, 800);
   }
 
   //A PRINCIPAL FUNCAO - IRA REDESENHAR A TELA DURANTE O JOGO
   public void paint(Graphics g) {
     //Funcao que o sistema chama se precisar
     super.paint(g);
+    int width = 50;
+    int height = 50;
     //drawImageh(Image img, int x, int y, int width, int height, ImageObserver observer)
     g.drawImage(backgroundImage, 0, 0, getSize().width, getSize().height, this);
     g.drawImage(pacmanClienteAImage, 400, 10, width, height, this);
-    g.drawImage(pacmanClienteBImage, 10, 400, width, jogadorB.height, this);
-    g.drawImage(pocaoMagicaImage, 250, 250, width, pocao.height, this);
+    g.drawImage(pacmanClienteBImage, 10, 400, width, height, this);
+    g.drawImage(pocaoMagicaImage, 250, 250, width, height, this);
 
   }
 
-  public void reset()
-  {
+  public void reset() {
 
   }
 
-  public void atualizaFundo(int x,int y, int width, int height)
-  {
+  public void atualizaFundo(int x,int y, int width, int height){
 
   }
 
