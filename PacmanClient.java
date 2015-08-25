@@ -13,10 +13,12 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.awt.image.BufferedImage;
 
 public class PacmanClient extends JFrame implements Runnable {
+  private BufferedImage bf;
   static PrintStream outputStremClient = null;
-  static String IP = "192.168.16.170";
+  static String IP = "127.0.0.1";
   static int PORT = 5000;
   JPanel board = new JPanel();
   Image pacmanClienteAImage = Toolkit.getDefaultToolkit().getImage("images/pacmanA.png");
@@ -52,16 +54,27 @@ public class PacmanClient extends JFrame implements Runnable {
 
   //A PRINCIPAL FUNCAO - IRA REDESENHAR A TELA DURANTE O JOGO
   public void paint(Graphics g) {
+		bf = new BufferedImage( this.getWidth(),this.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+		try{
+			animation(bf.getGraphics());
+			g.drawImage(bf,0,0,null);
+		}catch(Exception ex){
+
+		}
+  }
+  
+  public void animation(Graphics g) {
     /* Essa funcao é chamada toda vez que as teclas sao pressionadas */
     super.paint(g);
     int width = 50;
     int height = 50;
-	g.drawImage(backgroundImage, 0, 0, getSize().width, getSize().height, this);
 	if (endGame > 0) {
 		g.drawImage(endImageW, 0, 0, getSize().width, getSize().height, this);
 	} else if (endGame < 0) {
 		g.drawImage(endImageL, 0, 0, getSize().width, getSize().height, this);
 	} else {
+		g.drawImage(backgroundImage, 0, 0, getSize().width, getSize().height, this);
 		if (posMagicPotionX != -1){
 		  g.drawImage(pocaoMagicaImage, posMagicPotionX, posMagicPotionY, width, height, this);
 		}
@@ -77,6 +90,7 @@ public class PacmanClient extends JFrame implements Runnable {
   }
 
   public static void main(String[] args) {
+	  if (args.length > 0) IP = args[0];
     new Thread(new PacmanClient()).start();
   }
 
@@ -129,7 +143,7 @@ public class PacmanClient extends JFrame implements Runnable {
     }
 
   }
-
+  
   public void sendUpdate() {
 	  Vector v = new Vector(2);
 	  if (clientNumber==1) {

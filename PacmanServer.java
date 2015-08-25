@@ -19,9 +19,9 @@ class StructClient{
   int posClientBX = -1;
   int posClientBY = -1;
   boolean statusClientA, statusClientB;
-
+  
   ThreadEscutandoClient[] clients;
-
+  
   StructClient (){
 	  clients = new ThreadEscutandoClient[2];
 	  clients[0] = null;
@@ -32,8 +32,13 @@ class StructClient{
 	  if (clients[0]!=null) clients[0].sendUpdate();
 	  if (clients[1]!=null) clients[1].sendUpdate();
   }
-
+  
   public void move(int client, int x, int y){
+	  if (x < 5) x = 5;
+	  else if (x > 970) x = 970;
+	  if (y < 30) y = 30;
+	  else if (y > 750) y = 750;
+	  
 	  if (statusClientA || statusClientB) {
 		  if ((client==1 && checkCollision(x, y, posClientBX, posClientBY)) || (client==2 && checkCollision(posClientAX, posClientAY, x, y))) {
 			  endGame();
@@ -58,7 +63,7 @@ class StructClient{
 	//}
 	updateAllClients();
   }
-
+  
   public void endGame() {
 	  if (statusClientA) {
 		  clients[0].sendGameEnd("WIN");
@@ -68,15 +73,15 @@ class StructClient{
 		  clients[1].sendGameEnd("WIN");
 	  }
   }
-
+  
   public boolean checkCollision(int x1, int y1, int x2, int y2) {
-	  if ((x2 >= x1 && x2 <= x1+50) && (y2 >= y1 && y2 <= y1+50)) return true;
-	  if ((x2 >= x1 && x2 <= x1+50) && (y2+50 >= y1 && y2+50 <= y1+50)) return true;
-	  if ((x2+50 >= x1 && x2+50 <= x1+50) && (y2 >= y1 && y2 <= y1+50)) return true;
-	  if ((x2+50 >= x1 && x2+50 <= x1+50) && (y2+50 >= y1 && y2+50 <= y1+50)) return true;
+	  if ((x2+5 >= x1+5 && x2+5 <= x1+45) && (y2+5 >= y1+5 && y2+5 <= y1+45)) return true;
+	  if ((x2+5 >= x1+5 && x2+5 <= x1+45) && (y2+45 >= y1+5 && y2+45 <= y1+45)) return true;
+	  if ((x2+45 >= x1+5 && x2+45 <= x1+45) && (y2+5 >= y1+5 && y2+5 <= y1+45)) return true;
+	  if ((x2+45 >= x1+5 && x2+45 <= x1+45) && (y2+45 >= y1+5 && y2+45 <= y1+45)) return true;
 	  return false;
   }
-
+  
   public void getPotion(int client) {
 	  if (client==1) statusClientA = true;
 	  else statusClientB = true;
@@ -85,12 +90,12 @@ class StructClient{
 	  Timer timer = new Timer();
 	  timer.schedule(new PotionTask(this), 10000);
   }
-
+  
   public void resetPotion() {
 	  statusClientA = false;
 	  statusClientB = false;
-	  posMagicPotionX = (new Random()).nextInt(950 - 0) + 0;
-      posMagicPotionY = (new Random()).nextInt(750 - 0) + 0;
+	  posMagicPotionX = (new Random()).nextInt(950 - 50) + 50;
+      posMagicPotionY = (new Random()).nextInt(700 - 50) + 50;
 	  updateAllClients();
   }
 }
@@ -140,15 +145,15 @@ class PacmanServer {
             objSC.statusClientA = false; //nao bebeu porcao
             objSC.posClientAX = defineRamdonXY(800,900);
             //System.out.println("posClientAX:" + objSC.posClientAX);
-            objSC.posClientAY = defineRamdonXY(10, 50);
+            objSC.posClientAY = defineRamdonXY(50, 150);
 			objSC.clients[0] = new ThreadEscutandoClient(clientSocket, objSC, 1);
             objSC.clients[0].start();
           }else{
             objSC.statusClientB = false; //nao bebeu porcao
-            objSC.posClientBX = defineRamdonXY(10,50);
+            objSC.posClientBX = defineRamdonXY(50,150);
             objSC.posClientBY = defineRamdonXY(600, 700);
-            objSC.posMagicPotionX = defineRamdonXY(0,950);
-            objSC.posMagicPotionY = defineRamdonXY(0,750);
+            objSC.posMagicPotionX = defineRamdonXY(50,950);
+            objSC.posMagicPotionY = defineRamdonXY(50,700);
 			objSC.clients[1] = new ThreadEscutandoClient(clientSocket, objSC, 2);
             objSC.clients[1].start();
           }
@@ -196,19 +201,21 @@ class ThreadEscutandoClient extends Thread {
 		inputLine = inputLine.replace("[", "");
 		inputLine = inputLine.replace("]", "");
 		String[] splitedInput = inputLine.split(",");
-		if (splitedInput[0]!=null && splitedInput[1]!=null){
+		//if (splitedInput[0]!=null && splitedInput[1]!=null){
+		if (splitedInput.length > 1){
 			int x = Integer.parseInt(splitedInput[0].trim());
 			int y = Integer.parseInt(splitedInput[1].trim());
 			if (clientNumber==1) objSC.move(1, x, y);
 			else objSC.move(2, x, y);
 			System.out.println("ClientThread = " + clientNumber);
 		}
-      }while(inputLine!="");
-
+      }while(!inputLine.equals(""));
+		System.out.println("Conexacao terminada.");
 	  outputStreamClient.flush();
       outputStreamClient.close();
       inputStreamClient.close();
       clientSocket.close();
+	  
 
     } catch (IOException e) {
       System.out.println("Falha na conexao.IOException.");
@@ -217,7 +224,7 @@ class ThreadEscutandoClient extends Thread {
       System.out.println("Conexacao terminada pelo cliente.");
     }
   }
-
+  
   public void sendGameEnd(String result) {
 	  try{
 			outputStreamClient.println(result);
@@ -225,7 +232,7 @@ class ThreadEscutandoClient extends Thread {
 			System.out.println("Conexacao terminada pelo cliente.");
 		}
   }
-
+  
   public void sendUpdate() {
 		Vector v = new Vector(6);
 		v.addElement(objSC.posClientAX);
@@ -252,13 +259,13 @@ class ThreadEscutandoClient extends Thread {
 }
 
 class PotionTask extends TimerTask {
-
+	
 	StructClient objSC;
-
+	
 	PotionTask(StructClient objSC) {
 		this.objSC = objSC;
 	}
-
+	
     public void run() {
       System.out.println("Time's up!");
 	  objSC.resetPotion();
