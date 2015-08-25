@@ -17,15 +17,19 @@ import java.util.*;
 public class PacmanClient extends JFrame implements Runnable {
   static PrintStream outputStremClient = null;
   static int PORT = 5000;
-  static int posX, posY = 0;
-  static int posPotionX, posPotionY;
-  int hasInitializeGame = 0;
   JPanel board = new JPanel();
   Image pacmanClienteAImage = Toolkit.getDefaultToolkit().getImage("images/pacmanA.png");
   Image pacmanClienteBImage = Toolkit.getDefaultToolkit().getImage("images/pacmanB.png");
   Image pacmanMagicoImage = Toolkit.getDefaultToolkit().getImage("images/pacmanMagic.png");
   Image pocaoMagicaImage = Toolkit.getDefaultToolkit().getImage("images/magicPotion.png");
   Image backgroundImage = Toolkit.getDefaultToolkit().getImage("images/background.jpg");
+  int posMagicPotionX = -1;
+  int posMagicPotionY = -1;
+  int posClientAX = -1;
+  int posClientAY = -1;
+  int posClientBX = -1;
+  int posClientBY = -1;
+  int clientNumber = 0;
 
   PacmanClient() {
     super("Corrida de pacman - BSI 2015");
@@ -46,39 +50,49 @@ public class PacmanClient extends JFrame implements Runnable {
     super.paint(g);
     int width = 50;
     int height = 50;
-    posPotionX = getSize().width / 2;
-    posPotionY = getSize().height / 2;
-    //drawImageh(Image img, int x, int y, int width, int height, ImageObserver observer)
-    g.drawImage(backgroundImage, 0, 0, getSize().width, getSize().height, this);
-    g.drawImage(pacmanClienteAImage, posX, posY, width, height, this);
-    g.drawImage(pocaoMagicaImage, posPotionX, posPotionY, width, height, this);
+    if (posClientAX == -1){
+      g.drawImage(backgroundImage, 0, 0, getSize().width, getSize().height, this);
+    }
+    if (posClientAX != -1){
+      g.drawImage(pacmanClienteAImage, posClientAX, posClientAY, width, height, this);
+    }
+    if (posClientBX != -1){
+      g.drawImage(pacmanClienteBImage, posClientBX, posClientBY, width, height, this);
+    }
+    if (posMagicPotionX != -1){
+      g.drawImage(pocaoMagicaImage, posMagicPotionX, posMagicPotionY, width, height, this);
+    }
+  }
+
+  public void updateScreen(int x, int y){
+    System.out.println("Enviar coordenadas x:"+x+" y:" + y);
   }
 
 
 
   public static void main(String[] args) {
-    //Step 1 - Define ramdom x,y
-    defineRamdonXY();
     new Thread(new PacmanClient()).start();
   }
 
   //OBRIGATORIA DECLARACAO POIS CLASSE EXTENDE DE Runnable
   public void run() {
     Socket socket = null;
-    Scanner inputStreamClient = null;
+    DataInputStream inputStreamClient = null;
 
     try {
       socket = new Socket("127.0.0.1", PORT);
       outputStremClient = new PrintStream(socket.getOutputStream(), true);
-      inputStreamClient = new Scanner(socket.getInputStream());
+      inputStreamClient = new DataInputStream(socket.getInputStream());
       String inputLine;
       inputLine = inputStreamClient.readLine();
-      System.out.println("Server mandou:" + inputLine);
+      clientNumber = Integer.parseInt(inputLine);
+      System.out.println("Server mandou:" + clientNumber);
 
-      /*
+      //enviar coordenada do cliente
       do {
-        System.out.println(inputLine=inputStreamClient.nextLine());
-      } while (!inputLine.equals(""));*/
+        inputLine = inputStreamClient.readLine();
+        System.out.println("Server mandou2:" + inputLine);
+      } while ();
 
       outputStremClient.close();
       inputStreamClient.close();
@@ -95,9 +109,16 @@ public class PacmanClient extends JFrame implements Runnable {
   class Tecla extends KeyAdapter{
        public void keyPressed(KeyEvent ke){
            //System.out.println("Pressionado:" + ke.getKeyCode());
-           System.out.println("X:" + posX + "Y:" + posY);
+           //System.out.println("X:" + posX + "Y:" + posY);
+           int posX, posY;
+           if (clientNumber == 1){
+             posX = posClientAX;
+             posY = posClientAY;
+           }else{
+             posX = posClientBX;
+             posY = posClientBY;
+           }
             switch (ke.getKeyCode()){
-
                 case KeyEvent.VK_LEFT:
                     posX = posX - 5;
                     break;
@@ -111,7 +132,15 @@ public class PacmanClient extends JFrame implements Runnable {
                     posY = posY - 5;
                     break;
             }
+            if (clientNumber == 1){
+              posClientAX = posX;
+              posClientAY = posY;
+            }else{
+              posClientBX = posX;
+              posClientBY = posY;
+            }
             repaint();
+            updateScreen(posX,posY);
        }
    }
 
