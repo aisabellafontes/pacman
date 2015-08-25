@@ -17,18 +17,48 @@ import java.util.*;
 public class PacmanClient extends JFrame implements Runnable {
   static PrintStream outputStremClient = null;
   static int PORT = 5000;
-  /* Create a new board */
-  Background fundo = new Background();
+  static int posX, posY = 0;
+  static int posPotionX, posPotionY;
+  int hasInitializeGame = 0;
+  JPanel board = new JPanel();
+  Image pacmanClienteAImage = Toolkit.getDefaultToolkit().getImage("images/pacmanA.png");
+  Image pacmanClienteBImage = Toolkit.getDefaultToolkit().getImage("images/pacmanB.png");
+  Image pacmanMagicoImage = Toolkit.getDefaultToolkit().getImage("images/pacmanMagic.png");
+  Image pocaoMagicaImage = Toolkit.getDefaultToolkit().getImage("images/magicPotion.png");
+  Image backgroundImage = Toolkit.getDefaultToolkit().getImage("images/background.jpg");
 
   PacmanClient() {
     super("Corrida de pacman - BSI 2015");
-    fundo.requestFocus();
-    add(fundo, BorderLayout.CENTER);/* Add the board to the frame */
+    setDefaultCloseOperation(EXIT_ON_CLOSE);
+    add(board, BorderLayout.CENTER);/* Add the board to the frame */
+    addKeyListener(new Tecla());
     pack();
     setVisible(true);
   }
 
+  public Dimension getPreferredSize() {
+    return new Dimension(1024, 800);
+  }
+
+  //A PRINCIPAL FUNCAO - IRA REDESENHAR A TELA DURANTE O JOGO
+  public void paint(Graphics g) {
+    /* Essa funcao é chamada toda vez que as teclas sao pressionadas */
+    super.paint(g);
+    int width = 50;
+    int height = 50;
+    posPotionX = getSize().width / 2;
+    posPotionY = getSize().height / 2;
+    //drawImageh(Image img, int x, int y, int width, int height, ImageObserver observer)
+    g.drawImage(backgroundImage, 0, 0, getSize().width, getSize().height, this);
+    g.drawImage(pacmanClienteAImage, posX, posY, width, height, this);
+    g.drawImage(pocaoMagicaImage, posPotionX, posPotionY, width, height, this);
+  }
+
+
+
   public static void main(String[] args) {
+    //Step 1 - Define ramdom x,y
+    defineRamdonXY();
     new Thread(new PacmanClient()).start();
   }
 
@@ -42,10 +72,13 @@ public class PacmanClient extends JFrame implements Runnable {
       outputStremClient = new PrintStream(socket.getOutputStream(), true);
       inputStreamClient = new Scanner(socket.getInputStream());
       String inputLine;
+      inputLine = inputStreamClient.readLine();
+      System.out.println("Server mandou:" + inputLine);
 
+      /*
       do {
         System.out.println(inputLine=inputStreamClient.nextLine());
-      } while (!inputLine.equals(""));
+      } while (!inputLine.equals(""));*/
 
       outputStremClient.close();
       inputStreamClient.close();
@@ -58,5 +91,28 @@ public class PacmanClient extends JFrame implements Runnable {
     }
 
   }
+
+  class Tecla extends KeyAdapter{
+       public void keyPressed(KeyEvent ke){
+           //System.out.println("Pressionado:" + ke.getKeyCode());
+           System.out.println("X:" + posX + "Y:" + posY);
+            switch (ke.getKeyCode()){
+
+                case KeyEvent.VK_LEFT:
+                    posX = posX - 5;
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    posX = posX + 5;
+                    break;
+                case 40: //pra baixo
+                      posY = posY + 5;
+                     break;
+               case 38: //pra cima
+                    posY = posY - 5;
+                    break;
+            }
+            repaint();
+       }
+   }
 
 }
